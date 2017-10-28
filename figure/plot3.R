@@ -1,0 +1,13 @@
+library(dplyr)
+library(lubridate)
+
+data <- read.table('./household_power_consumption.txt',header=TRUE,sep = ';',na.strings = '?')
+data $Date <-dmy(data$Date)
+feb <- filter(data,Date=='2007-02-01' | Date == '2007-02-02')
+feb$Datetime <- as.POSIXct(paste(feb$Date, feb$Time), format="%Y-%m-%d %H:%M:%S")
+png(filename = 'plot3.png',width = 480,height = 480,units = 'px')
+with(feb,plot(Datetime,Sub_metering_1,type = 'l',xlab = '',ylab='Energy sub metering'))
+with(feb,lines(Datetime,Sub_metering_2,type = 'l',col='red'))
+with(feb,lines(Datetime,Sub_metering_3,type = 'l',col='blue'))
+legend('topright',lty=1,col=c('black','red','blue'),legend=c('Sub_metering_1','Sub_metering_2','Sub_metering_3'))
+dev.off()
